@@ -1,0 +1,68 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: simplified_fintech_app
+    container_name: simplified_fintech_app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker/php/conf.d/docker-php-ext-xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    networks:
+      - simplified_fintech_network
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      PHP_IDE_CONFIG: "serverName=simplified_fintech_app"
+
+  nginx:
+    image: nginx:alpine
+    container_name: simplified_fintech_nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+        - ./:/var/www
+        - ./docker/nginx/:/etc/nginx/conf.d/
+        - ./logs/nginx:/var/logs/nginx
+    depends_on:
+      - app
+    networks:
+      - simplified_fintech_network
+
+  mysql:
+    image: "mysql:8.0"
+    container_name: simplified_fintech_mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      - "MYSQL_DATABASE=simplified_fintech"
+      - "MYSQL_ROOT_PASSWORD=root"
+      - "TZ=America/Sao_Paulo"
+    volumes:
+      - ./docker/mysql/dbdata:/var/lib/mysql
+      - ./logs/mysql:/var/logs/mysql
+    networks:
+      - simplified_fintech_network
+
+  redis:
+    image: redis:alpine
+    container_name: simplified_fintech_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./docker/redis:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+
+networks:
+  simplified_fintech_network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
