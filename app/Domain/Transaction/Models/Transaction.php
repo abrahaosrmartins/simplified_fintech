@@ -4,10 +4,10 @@ namespace App\Domain\Transaction\Models;
 
 use App\Domain\Transaction\Enums\TransactionStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Transaction
+class Transaction extends Model
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
 
     /**
