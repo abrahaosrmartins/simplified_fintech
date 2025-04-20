@@ -4,6 +4,7 @@ namespace App\Domain\User\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Domain\User\Enums\DocumentTypeEnum;
 use App\Domain\User\Enums\UserTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -22,6 +23,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'document',
+        'document_type',
         'password',
         'type'
     ];
@@ -44,7 +47,8 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
-            'type' => UserTypeEnum::class
+            'type' => UserTypeEnum::class,
+            'document_type' => DocumentTypeEnum::class,
         ];
     }
 }
