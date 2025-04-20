@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('document')->unique();
-            $table->enum('document_type', [DocumentTypeEnum::class]);
+            $table->enum('document_type', [DocumentTypeEnum::values()]);
             $table->string('password');
-            $table->enum('type', [UserTypeEnum::class]);
+            $table->enum('type', [UserTypeEnum::values()]);
             $table->timestamps();
         });
     }
