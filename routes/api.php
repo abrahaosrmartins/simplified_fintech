@@ -25,3 +25,4 @@ Route::post('/auth', function (Request $request) {
     ]);
 });
 
+Route::post('/transfer', [TransactionController::class, 'store'])->middleware('auth:sanctum');

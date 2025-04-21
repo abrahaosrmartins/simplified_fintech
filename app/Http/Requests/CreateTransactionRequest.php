@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Domain\User\Enums\UserTypeEnum;
+use App\Domain\User\Models\User;
+use Illuminate\Foundation\Http\FormRequest;
+
+class CreateTransactionRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return $this->user() && $this->user()->type == UserTypeEnum::COMMON;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'payer' => 'required|integer',
+            'payee' => 'required|integer',
+            'value' => 'required|decimal:2,8',
+        ];
+    }
+}
