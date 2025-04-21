@@ -4,6 +4,7 @@ namespace App\Application\Transaction\UseCases;
 
 use App\Application\Transaction\UseCases\Dto\TransactionInputDto;
 use App\Domain\Transaction\Repositories\TransactionRepositoryInterface;
+use App\Domain\TransactionWasApproved;
 use App\Domain\User\Enums\UserTypeEnum;
 use App\Domain\User\Models\User;
 use App\Domain\Wallet\Repositories\WalletRepositoryInterface;
@@ -36,6 +37,7 @@ class CreateTransactionUseCase
         $this->validatesUserHasBalance($user, $transactionInputDto->value);
         // $this->executesExternalValidation();
         $transaction = $this->persistTransaction($transactionInputDto);
+        event(new TransactionWasApproved($transaction));
         $this->notificationService->notify($user->id);
 
         return $transaction;
