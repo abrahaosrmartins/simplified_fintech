@@ -13,7 +13,7 @@ class CreateTransactionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user() && $this->user()->type == UserTypeEnum::COMMON;
+        return true;
     }
 
     /**
