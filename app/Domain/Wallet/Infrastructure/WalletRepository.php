@@ -3,9 +3,10 @@
 namespace App\Domain\Wallet\Infrastructure;
 
 use App\Domain\Wallet\Models\Wallet;
+use App\Domain\Wallet\Repositories\WalletRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 
-class WalletRepository
+class WalletRepository implements WalletRepositoryInterface
 {
     private $model;
 
@@ -16,11 +17,11 @@ class WalletRepository
 
     public function findById(int $walletId): Model
     {
-        return $this->model->findById($walletId);
+        return $this->model->find($walletId);
     }
 
     public function findByUserId(int $userId): Model
     {
-        return $this->model->where('user_id', $userId);
+        return $this->model->where('user_id', $userId)->first();
     }
 }

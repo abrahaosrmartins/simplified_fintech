@@ -2,9 +2,13 @@
 
 namespace App\Domain\Transaction\Infrastructure;
 
+use App\Application\Transaction\UseCases\Dto\TransactionInputDto;
+use App\Domain\Transaction\Enums\TransactionStatusEnum;
 use App\Domain\Transaction\Models\Transaction;
+use App\Domain\Transaction\Repositories\TransactionRepositoryInterface;
+use Illuminate\Database\Eloquent\Model;
 
-class TransactionRepository
+class TransactionRepository implements TransactionRepositoryInterface
 {
     private $model;
 
@@ -13,11 +17,15 @@ class TransactionRepository
         $this->model = new Transaction();
     }
 
-    public function store()
+    public function store(TransactionInputDto $transactionInputDto): Model
     {
         $data = [
-
+            'payer' => $transactionInputDto->payer,
+            'payee' => $transactionInputDto->payee,
+            'value' => $transactionInputDto->value,
+            'status' => TransactionStatusEnum::APPROVED,
         ];
+
         return $this->model->create($data);
     }
 }

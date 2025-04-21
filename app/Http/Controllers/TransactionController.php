@@ -41,18 +41,29 @@ class TransactionController extends Controller
             );
 
             $useCase = resolve(CreateTransactionUseCase::class);
-            $invoice = $useCase->execute($request->user(), $transactionInputDto);
+            $transaction = $useCase->execute($request->user(), $transactionInputDto);
+            // TODO: tentar aplicar uma invoice bonitinha $invoice = (new TransactionInvoiceResource($transaction))->toArray();
 
             DB::commit();
 
-            return response()->json(TransactionInvoiceResource::toArray($invoice));
+            return response()->json($transaction);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            //throw $e;
+            return response()->json([
+                'status' => 'fail',
+                'data' => [
+                    'message' => $e->getMessage(),
+                ],
+            ]);
         } catch (\Throwable $th) {
             DB::rollBack();
-            //throw $th;
+            return response()->json([
+                'status' => 'fail',
+                'data' => [
+                    'message' => $th->getMessage(),
+                ],
+            ]);
         }
     }
 
@@ -61,7 +72,7 @@ class TransactionController extends Controller
      */
     public function show(string $id)
     {
-        //
+        abort(405, 'Method Not Allowed');
     }
 
     /**
