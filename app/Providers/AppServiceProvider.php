@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Domain\Transaction\Infrastructure\TransactionRepository;
+use App\Domain\Transaction\Repositories\TransactionRepositoryInterface;
+use App\Domain\Wallet\Infrastructure\WalletRepository;
+use App\Domain\Wallet\Repositories\WalletRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(TransactionRepositoryInterface::class,TransactionRepository::class);
+        $this->app->bind(WalletRepositoryInterface::class,WalletRepository::class);
     }
 
     /**
