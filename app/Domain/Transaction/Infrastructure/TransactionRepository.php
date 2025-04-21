@@ -28,4 +28,14 @@ class TransactionRepository implements TransactionRepositoryInterface
 
         return $this->model->create($data);
     }
+
+    public function findByIdAndPayer(int $transactionId, int $payerId): Model
+    {
+        return $this->model
+            ->with('payeeUser')
+            ->where('payer', $payerId)
+            ->where('id', $transactionId)
+            ->first();
+    }
+
 }

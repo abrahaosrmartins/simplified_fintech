@@ -24,4 +24,9 @@ class WalletRepository implements WalletRepositoryInterface
     {
         return $this->model->where('user_id', $userId)->first();
     }
+
+    public function findByUserIdLockedForUpdate(int $userId): Model
+    {
+        return $this->model->where('user_id', $userId)->lockForUpdate()->first();
+    }
 }

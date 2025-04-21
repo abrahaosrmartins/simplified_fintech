@@ -1,9 +1,7 @@
 <?php
 
-use App\Domain\User\Models\User;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -25,4 +23,8 @@ Route::post('/auth', function (Request $request) {
     ]);
 });
 
-Route::post('/transfer', [TransactionController::class, 'store'])->middleware('auth:sanctum');
+Route::prefix('/transfer')->group(function () {
+    Route::post('/transfer', [TransactionController::class, 'createTransaction'])->middleware('auth:sanctum');
+    Route::get('/{transactionId}/invoice', [TransactionController::class, 'getInvoice'])->middleware('auth:sanctum');
+    Route::get('/extract', [TransactionController::class, 'getExtract'])->middleware('auth:sanctum');
+})->middleware('auth:sanctum');
