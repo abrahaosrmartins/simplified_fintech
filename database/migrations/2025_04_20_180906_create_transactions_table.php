@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreign('payer')->references('id')->on('users');
             $table->unsignedBigInteger('payee');
             $table->foreign('payee')->references('id')->on('users');
-            $table->decimal('amount', 8, 2);
+            $table->decimal('value', 8, 2);
             $table->enum('status', [TransactionStatusEnum::values()]);
             $table->timestamps();
         });
