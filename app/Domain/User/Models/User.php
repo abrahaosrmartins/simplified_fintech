@@ -4,9 +4,13 @@ namespace App\Domain\User\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Domain\Transaction\Models\Transaction;
 use App\Domain\User\Enums\DocumentTypeEnum;
 use App\Domain\User\Enums\UserTypeEnum;
+use App\Domain\Wallet\Models\Wallet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -50,5 +54,20 @@ class User extends Authenticatable
             'type' => UserTypeEnum::class,
             'document_type' => DocumentTypeEnum::class,
         ];
+    }
+
+    public function sentTransactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'payer', 'id');
+    }
+
+    public function receivedTransactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'payee', 'id');
+    }
+
+    public function wallet(): HasOne
+    {
+        return $this->hasOne(Wallet::class, 'user_id', 'id');
     }
 }

@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Application\Transaction\UseCases\CreateTransactionUseCase;
+use App\Application\Transaction\UseCases\Dto\GetTransactionInvoiceInputDto;
+use App\Application\Transaction\UseCases\Dto\PaginationParamsDto;
 use App\Application\Transaction\UseCases\Dto\TransactionInputDto;
+use App\Application\Transaction\UseCases\GetTransactionInvoiceUseCase;
+use App\Application\Transaction\UseCases\GetTransactionsExtractUseCase;
 use App\Http\Requests\CreateTransactionRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -68,19 +72,28 @@ class TransactionController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function getExtract(Request $request)
     {
-        abort(405, 'Method Not Allowed');
-    }
+        try {
+            $paginationParamsDto = new PaginationParamsDto(
+                50,
+                request()->get('page', 1),
+                request()->url(),
+                request()->query()
+            );
+            $useCase = resolve(GetTransactionsExtractUseCase::class);
+            $extract = $useCase->execute($request->user(), $paginationParamsDto);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        abort(405, 'Method Not Allowed');
+            return response()->json([
+                'data' => $extract
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'fail',
+                'data' => [
+                    'message' => $th->getMessage(),
+                ],
+            ]);
+        }
     }
 }

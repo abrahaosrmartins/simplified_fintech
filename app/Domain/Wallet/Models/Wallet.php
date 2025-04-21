@@ -2,6 +2,7 @@
 
 namespace App\Domain\Wallet\Models;
 
+use App\Domain\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Wallet extends Model
@@ -15,4 +16,9 @@ class Wallet extends Model
         'user_id',
         'balance',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }
