@@ -25,3 +25,5 @@ yarn-error.log
 /.vscode
 /docker/mysql
 /docker/php/conf.d/docker-php-ext-xdebug.ini
+docker/redis/dump.rdb
+.env.testing
