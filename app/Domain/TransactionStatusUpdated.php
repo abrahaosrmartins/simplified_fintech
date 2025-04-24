@@ -4,7 +4,7 @@ namespace App\Domain;
 
 use App\Domain\Transaction\Models\Transaction;
 
-class TransactionWasApproved
+class TransactionStatusUpdated
 {
     public Transaction $transaction;
 
