@@ -8,6 +8,7 @@ use App\Domain\Transaction\Models\Transaction;
 use App\Domain\User\Enums\DocumentTypeEnum;
 use App\Domain\User\Enums\UserTypeEnum;
 use App\Domain\Wallet\Models\Wallet;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -54,6 +55,11 @@ class User extends Authenticatable
             'type' => UserTypeEnum::class,
             'document_type' => DocumentTypeEnum::class,
         ];
+    }
+
+    protected static function newFactory()
+    {
+        return UserFactory::new();
     }
 
     public function sentTransactions(): HasMany

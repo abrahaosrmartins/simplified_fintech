@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Domain\User\Enums\UserTypeEnum;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -14,17 +12,17 @@ class WalletSeeder extends Seeder
      */
     public function run(): void
     {
-        $commonUser = DB::table('users')->select()->where('type', UserTypeEnum::COMMON)->first();
-        $merchantUser = DB::table('users')->select()->where('type', UserTypeEnum::MERCHANT)->first();
+        $users = DB::table('users')->select('id', 'type')->get();
 
-        DB::table('wallets')->insert([
-            'user_id' => $commonUser->id,
-            'balance' => 1000.00,
-        ]);
+        $wallets = $users->map(function ($user) {
+            return [
+                'user_id' => $user->id,
+                'balance' => 1000,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+        })->toArray();
 
-        DB::table('wallets')->insert([
-            'user_id' => $merchantUser->id,
-            'balance' => 1000.00,
-        ]);
+        DB::table('wallets')->insert($wallets);
     }
 }
