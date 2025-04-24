@@ -24,7 +24,7 @@ Route::post('/auth', function (Request $request) {
 });
 
 Route::prefix('/transfer')->group(function () {
-    Route::post('/transfer', [TransactionController::class, 'createTransaction'])->middleware('auth:sanctum');
+    Route::post('/', [TransactionController::class, 'createTransaction'])->middleware('auth:sanctum');
     Route::get('/{transactionId}/invoice', [TransactionController::class, 'getInvoice'])->middleware('auth:sanctum');
     Route::get('/extract', [TransactionController::class, 'getExtract'])->middleware('auth:sanctum');
-})->middleware('auth:sanctum');
+});
