@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Application\Transaction\UseCases\CreateTransactionUseCase;
-use App\Application\Transaction\UseCases\Dto\GetTransactionInvoiceInputDto;
 use App\Application\Transaction\UseCases\Dto\PaginationParamsDto;
 use App\Application\Transaction\UseCases\Dto\TransactionInputDto;
 use App\Application\Transaction\UseCases\GetTransactionInvoiceUseCase;
@@ -11,6 +10,7 @@ use App\Application\Transaction\UseCases\GetTransactionsExtractUseCase;
 use App\Http\Requests\CreateTransactionRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TransactionController extends Controller
 {
@@ -25,6 +25,7 @@ class TransactionController extends Controller
                 $request->input('value'),
                 $request->input('payer'),
                 $request->input('payee'),
+                'transfer',
             );
 
             $useCase = resolve(CreateTransactionUseCase::class);
@@ -37,6 +38,7 @@ class TransactionController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error($e->getMessage(), ['exception' => $e]);
             return response()->json([
                 'status' => 'fail',
                 'data' => [
@@ -45,6 +47,7 @@ class TransactionController extends Controller
             ]);
         } catch (\Throwable $th) {
             DB::rollBack();
+            Log::error($th->getMessage(), ['exception' => $th]);
             return response()->json([
                 'status' => 'fail',
                 'data' => [
@@ -63,6 +66,7 @@ class TransactionController extends Controller
                 'data' => $invoice
             ]);
         } catch (\Throwable $th) {
+            Log::error($th->getMessage(), ['exception' => $th]);
             return response()->json([
                 'status' => 'fail',
                 'data' => [
@@ -88,6 +92,7 @@ class TransactionController extends Controller
                 'data' => $extract
             ]);
         } catch (\Throwable $th) {
+            Log::error($th->getMessage(), ['exception' => $th]);
             return response()->json([
                 'status' => 'fail',
                 'data' => [
