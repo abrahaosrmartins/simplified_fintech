@@ -5,6 +5,7 @@ namespace App\Services\External;
 use App\Services\External\Contracts\NotificationServiceInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Log;
 
 class NotificationService implements NotificationServiceInterface
 {
@@ -21,27 +22,23 @@ class NotificationService implements NotificationServiceInterface
         ]);
     }
 
-    public function notify(int $userId): bool
+    public function notify(int $userId): void
     {
         $retries = 0;
-        do {
+        while ($retries < 3 ) {
             try {
                 $response = $this->client->request('POST', 'v1/notify', [
                     'json' => [$userId],
                 ]);
 
-                $data = json_decode($response->getBody()->getContents(), true);
+                json_decode($response->getBody()->getContents(), true);
             } catch (RequestException $e) {
+                $retries++;
                 if ($retries >= 3) {
-                    throw $e;
+                    Log::error("Falha ao tentar enviar notificação.", ['exception' => $e]);
                 }
-                //TODO: implementar log
-                sleep($retries++);
-                return false;
+                sleep($retries);
             }
-            return false;
-        } while (!$response && $retries < 3 );
-
-        return $data['status'] === 'success';
+        }
     }
 }
