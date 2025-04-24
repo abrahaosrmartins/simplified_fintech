@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Domain\User\Enums\UserTypeEnum;
-use App\Domain\User\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateTransactionRequest extends FormRequest
@@ -26,7 +24,7 @@ class CreateTransactionRequest extends FormRequest
         return [
             'payer' => 'required|integer',
             'payee' => 'required|integer',
-            'value' => 'required|decimal:2,8',
+            'value' => 'required|numeric|decimal:1,2|min:0.01',
         ];
     }
 }
