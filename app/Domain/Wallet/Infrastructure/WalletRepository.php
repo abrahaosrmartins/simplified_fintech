@@ -15,17 +15,17 @@ class WalletRepository implements WalletRepositoryInterface
         $this->model = new Wallet();
     }
 
-    public function findById(int $walletId): Model
+    public function findById(int $walletId): ?Model
     {
         return $this->model->find($walletId);
     }
 
-    public function findByUserId(int $userId): Model
+    public function findByUserId(int $userId): ?Model
     {
         return $this->model->where('user_id', $userId)->first();
     }
 
-    public function findByUserIdLockedForUpdate(int $userId): Model
+    public function findByUserIdLockedForUpdate(int $userId): ?Model
     {
         return $this->model->where('user_id', $userId)->lockForUpdate()->first();
     }

@@ -18,19 +18,20 @@ class TransactionRepository implements TransactionRepositoryInterface
         $this->model = new Transaction();
     }
 
-    public function store(TransactionInputDto $transactionInputDto): Model
+    public function store(TransactionInputDto $transactionInputDto): ?Model
     {
         $data = [
             'payer' => $transactionInputDto->payer,
             'payee' => $transactionInputDto->payee,
             'value' => $transactionInputDto->value,
-            'status' => TransactionStatusEnum::APPROVED,
+            'type' => $transactionInputDto->type,
+            'status' => TransactionStatusEnum::PENDING,
         ];
 
         return $this->model->create($data);
     }
 
-    public function findByIdAndPayer(int $transactionId, int $payerId): Model
+    public function findByIdAndPayer(int $transactionId, int $payerId): ?Model
     {
         return $this->model
             ->with('payeeUser')

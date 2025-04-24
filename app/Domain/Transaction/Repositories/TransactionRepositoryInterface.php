@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 interface TransactionRepositoryInterface
 {
-    public function store(TransactionInputDto $transactionInputDto): Model;
-    public function findByIdAndPayer(int $transactionId, int $payerId): Model;
+    public function store(TransactionInputDto $transactionInputDto): ?Model;
+    public function findByIdAndPayer(int $transactionId, int $payerId): ?Model;
     public function getSentTransactionsByUserId(int $userId): Collection;
 }

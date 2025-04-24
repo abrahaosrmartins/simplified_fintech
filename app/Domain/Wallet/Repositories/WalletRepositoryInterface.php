@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 interface WalletRepositoryInterface
 {
-    public function findById(int $walletId): Model;
-    public function findByUserId(int $userId): Model;
-    public function findByUserIdLockedForUpdate(int $userId): Model;
+    public function findById(int $walletId): ?Model;
+    public function findByUserId(int $userId): ?Model;
+    public function findByUserIdLockedForUpdate(int $userId): ?Model;
 }
