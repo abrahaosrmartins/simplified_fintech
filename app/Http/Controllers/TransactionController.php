@@ -38,7 +38,6 @@ class TransactionController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error($e->getMessage(), ['exception' => $e]);
             return response()->json([
                 'status' => 'fail',
                 'data' => [
@@ -51,7 +50,7 @@ class TransactionController extends Controller
             return response()->json([
                 'status' => 'fail',
                 'data' => [
-                    'message' => $th->getMessage(),
+                    'message' => 'Oops! Algo deu errado. Por favor contate a administração do sistema, ou tente mais tarde.',
                 ],
             ]);
         }
@@ -70,7 +69,7 @@ class TransactionController extends Controller
             return response()->json([
                 'status' => 'fail',
                 'data' => [
-                    'message' => $th->getMessage(),
+                    'message' => 'Oops! Algo deu errado. Por favor contate a administração do sistema, ou tente mais tarde.',
                 ],
             ]);
         }
@@ -96,7 +95,7 @@ class TransactionController extends Controller
             return response()->json([
                 'status' => 'fail',
                 'data' => [
-                    'message' => $th->getMessage(),
+                    'message' => 'Oops! Algo deu errado. Por favor contate a administração do sistema, ou tente mais tarde.',
                 ],
             ]);
         }
