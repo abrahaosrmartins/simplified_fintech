@@ -4,6 +4,7 @@ namespace App\Application\Transaction\UseCases;
 
 use App\Domain\Transaction\Repositories\TransactionRepositoryInterface;
 use App\Domain\User\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 
 class GetTransactionInvoiceUseCase
@@ -22,6 +23,10 @@ class GetTransactionInvoiceUseCase
         $invoice = Cache::remember($cacheKey, now()->addHours(24), function () use ($transactionId, $user) {
             return $this->transactionRepository->findByIdAndPayer($transactionId, $user->id);
         });
+
+        if (!$invoice) {
+            throw new Exception('Oops! Não foi possível realizar essa ação. Por favor, contate a administração do sistema.');
+        }
 
         return [
             'payee' => $invoice->payeeUser->name,
