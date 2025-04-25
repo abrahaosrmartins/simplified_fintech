@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Domain\User\Enums\UserTypeEnum;
 use App\Domain\Wallet\Models\Wallet;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +20,7 @@ class WalletFactory extends Factory
      */
     public function definition(): array
     {
-        $user = DB::table('users')->select()->where('type', UserTypeEnum::COMMON)->first();
+        $user = DB::table('users')->select()->first();
         return [
             'user_id' => $user->id,
             'balance' => 1000,

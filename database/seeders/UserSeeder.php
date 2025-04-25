@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         User::factory()->count(2)->create();
         User::factory()->create([
             'email' => 'merchant@user.com',
-            'document' => '32165498742',
+            'document' => '32165498742456',
             'document_type' => DocumentTypeEnum::CNPJ,
             'type' => UserTypeEnum::MERCHANT
         ]);
