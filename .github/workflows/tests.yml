@@ -40,6 +40,7 @@ jobs:
 
       - name: Run tests suite
         run:
+          php artisan key:generate
           php artisan test
 
     services:
