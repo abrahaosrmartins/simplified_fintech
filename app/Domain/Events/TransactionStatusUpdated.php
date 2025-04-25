@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain;
+namespace App\Domain\Events;
 
 use App\Domain\Transaction\Models\Transaction;
 

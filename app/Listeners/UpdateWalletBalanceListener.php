@@ -2,12 +2,14 @@
 
 namespace App\Listeners;
 
+use App\Domain\Events\TransactionApproved;
+use App\Domain\Events\TransactionStatusUpdated;
 use App\Domain\Transaction\Enums\TransactionStatusEnum;
-use App\Domain\TransactionStatusUpdated;
 use App\Domain\Wallet\Repositories\WalletRepositoryInterface;
 use Exception;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class UpdateWalletBalanceListener
+class UpdateWalletBalanceListener implements ShouldQueue
 {
     private WalletRepositoryInterface $walletRepository;
 
@@ -22,27 +24,29 @@ class UpdateWalletBalanceListener
     /**
      * Handle the event.
      */
-    public function handle(TransactionStatusUpdated $event): void
+    public function handle(TransactionStatusUpdated $event)
     {
         $transaction = $event->transaction;
 
         if (!$transaction->status === TransactionStatusEnum::PENDING) {
-            return;
+            return false;
         }
 
         $payerWallet = $this->walletRepository->findByUserIdLockedForUpdate($transaction->payer);
         $payeeWallet = $this->walletRepository->findByUserIdLockedForUpdate($transaction->payee);
 
         if (!$payeeWallet || !$payeeWallet) {
-            throw new Exception('Oops! Não conseguimos completar essa transação no momento. Por favor. Contate a administração do sistema.');
+            $transaction->delete();
+            return false;
         }
 
-        $payerWallet->balance -= $transaction->value;
-        $payeeWallet->balance += $transaction->value;
+        $payerWallet->balance = bcsub($payerWallet->balance, $transaction->value);
+        $payeeWallet->balance = bcadd($transaction->value, $transaction->value);
         $transaction->status = TransactionStatusEnum::APPROVED;
 
         $transaction->save();
         $payerWallet->save();
         $payeeWallet->save();
+        event(new TransactionApproved($transaction));
     }
 }

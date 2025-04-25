@@ -2,11 +2,13 @@
 
 namespace App\Listeners;
 
+use App\Domain\Events\TransactionApproved;
+use App\Domain\Events\TransactionStatusUpdated;
 use App\Domain\Transaction\Enums\TransactionStatusEnum;
-use App\Domain\TransactionStatusUpdated;
 use App\Services\External\Contracts\NotificationServiceInterface;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NotifyPayeeListener
+class NotifyPayeeListener implements ShouldQueue
 {
 
     private NotificationServiceInterface $notificationService;
@@ -22,7 +24,7 @@ class NotifyPayeeListener
     /**
      * Handle the event.
      */
-    public function handle(TransactionStatusUpdated $event): void
+    public function handle(TransactionApproved $event): void
     {
         $transaction = $event->transaction;
         if ($transaction->status === TransactionStatusEnum::APPROVED) {

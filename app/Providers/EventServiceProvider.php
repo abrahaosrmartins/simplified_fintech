@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-use App\Domain\TransactionStatusUpdated;
+use App\Domain\Events\TransactionApproved;
+use App\Domain\Events\TransactionStatusUpdated;
 use App\Listeners\ExtractCacheClearListener;
 use App\Listeners\NotifyPayeeListener;
 use App\Listeners\UpdateWalletBalanceListener;
@@ -13,8 +14,11 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         TransactionStatusUpdated::class => [
             UpdateWalletBalanceListener::class,
+        ],
+
+        TransactionApproved::class => [
             NotifyPayeeListener::class,
-            ExtractCacheClearListener::class
+            ExtractCacheClearListener::class,
         ],
     ];
 

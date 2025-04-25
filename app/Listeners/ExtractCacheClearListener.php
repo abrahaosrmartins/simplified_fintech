@@ -2,15 +2,17 @@
 
 namespace App\Listeners;
 
+use App\Domain\Events\TransactionApproved;
 use App\Domain\Transaction\Enums\TransactionStatusEnum;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Cache;
 
-class ExtractCacheClearListener
+class ExtractCacheClearListener implements ShouldQueue
 {
     /**
      * Handle the event.
      */
-    public function handle(object $event): void
+    public function handle(TransactionApproved $event): void
     {
         $transaction = $event->transaction;
         if ($transaction->status === TransactionStatusEnum::APPROVED) {
