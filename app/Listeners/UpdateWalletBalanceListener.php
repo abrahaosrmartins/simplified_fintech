@@ -41,7 +41,7 @@ class UpdateWalletBalanceListener implements ShouldQueue
         }
 
         $payerWallet->balance = bcsub($payerWallet->balance, $transaction->value);
-        $payeeWallet->balance = bcadd($transaction->value, $transaction->value);
+        $payeeWallet->balance = bcadd($payeeWallet->balance, $transaction->value);
         $transaction->status = TransactionStatusEnum::APPROVED;
 
         $transaction->save();
