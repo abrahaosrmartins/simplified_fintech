@@ -22,6 +22,7 @@ class Transaction extends Model
         'payer',
         'payee',
         'value',
+        'type',
         'status'
     ];
 
