@@ -39,7 +39,7 @@ jobs:
           composer install --no-interaction
 
       - name: Run tests suite
-        run:
+        run: |
           php artisan key:generate
           php artisan test
 
