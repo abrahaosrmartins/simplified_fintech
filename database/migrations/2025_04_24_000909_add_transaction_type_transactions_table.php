@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->enum('type', [TransactionTypesEnum::values()])->after('value');
+            $table->enum('type', [TransactionTypesEnum::values()])->after('value')->index('type');
         });
     }
 
@@ -22,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropColumn('type');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('type');
+        });
     }
 };
