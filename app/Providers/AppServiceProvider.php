@@ -25,6 +25,11 @@ class AppServiceProvider extends ServiceProvider
         //externals
         $this->app->bind(AuthorizerServiceInterface::class, AuthorizerService::class);
         $this->app->bind(NotificationServiceInterface::class, NotificationService::class);
+
+        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
+        }
     }
 
     /**
