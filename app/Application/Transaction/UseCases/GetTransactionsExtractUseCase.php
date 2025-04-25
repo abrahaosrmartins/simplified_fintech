@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Cache;
 
 class GetTransactionsExtractUseCase
 {
-    private TransactionRepositoryInterface $transactionRepository;
+    private TransactionRepositoryInterface $repository;
 
-    public function __construct(TransactionRepositoryInterface $transactionRepository)
+    public function __construct(TransactionRepositoryInterface $repository)
     {
-        $this->transactionRepository = $transactionRepository;
+        $this->repository = $repository;
     }
 
     public function execute(User $user, PaginationParamsDto $paginationParamsDto)
@@ -22,7 +22,7 @@ class GetTransactionsExtractUseCase
         $cacheKey = "user_extract_{$user->id}_" . now()->format('Y_m');
 
         $transactions = Cache::remember($cacheKey, now()->addHours(24), function () use ($user) {
-            return $this->transactionRepository->getSentTransactionsByUserId($user->id);
+            return $this->repository->getSentTransactionsByUserId($user->id);
         });
 
         $page = $paginationParamsDto->page;

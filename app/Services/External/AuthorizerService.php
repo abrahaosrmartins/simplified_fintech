@@ -3,6 +3,7 @@
 namespace App\Services\External;
 
 use App\Services\External\Contracts\AuthorizerServiceInterface;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Log;
@@ -26,7 +27,7 @@ class AuthorizerService implements AuthorizerServiceInterface
     public function authorize(): bool
     {
         $retries = 0;
-        while ($retries < 3 ) {
+        while ($retries < 3) {
             try {
                 $response = $this->client->request('GET', 'v2/authorize');
                 $data = json_decode($response->getBody()->getContents(), true);
@@ -36,7 +37,6 @@ class AuthorizerService implements AuthorizerServiceInterface
                 $retries++;
                 if ($retries >= 3) {
                     Log::error("Falha ao tentar acessar o serviço de autenticação", ['exception' => $e]);
-                    return false;
                 }
                 sleep($retries);
             }

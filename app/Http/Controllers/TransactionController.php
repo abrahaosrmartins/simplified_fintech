@@ -21,7 +21,7 @@ class TransactionController extends Controller
     {
         DB::beginTransaction();
         try {
-            $transactionInputDto = new TransactionInputDto(
+            $inputDto = new TransactionInputDto(
                 $request->input('value'),
                 $request->input('payer'),
                 $request->input('payee'),
@@ -29,7 +29,7 @@ class TransactionController extends Controller
             );
 
             $useCase = resolve(CreateTransactionUseCase::class);
-            $transaction = $useCase->execute($request->user(), $transactionInputDto);
+            $transaction = $useCase->execute($request->user(), $inputDto);
 
             DB::commit();
 
@@ -43,7 +43,7 @@ class TransactionController extends Controller
                 'data' => [
                     'message' => $e->getMessage(),
                 ],
-            ]);
+            ], $e->getCode());
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error($th->getMessage(), ['exception' => $th]);

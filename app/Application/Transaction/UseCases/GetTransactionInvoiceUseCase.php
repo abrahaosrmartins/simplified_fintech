@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Cache;
 
 class GetTransactionInvoiceUseCase
 {
-    private TransactionRepositoryInterface $transactionRepository;
+    private TransactionRepositoryInterface $repository;
 
-    public function __construct(TransactionRepositoryInterface $transactionRepository)
+    public function __construct(TransactionRepositoryInterface $repository)
     {
-        $this->transactionRepository = $transactionRepository;
+        $this->repository = $repository;
     }
 
     public function execute(User $user, int $transactionId)
@@ -21,11 +21,11 @@ class GetTransactionInvoiceUseCase
         $cacheKey = "transaction_invoice_{$user->id}_{$transactionId}";
 
         $invoice = Cache::remember($cacheKey, now()->addHours(24), function () use ($transactionId, $user) {
-            return $this->transactionRepository->findByIdAndPayer($transactionId, $user->id);
+            return $this->repository->findByIdAndPayer($transactionId, $user->id);
         });
 
         if (!$invoice) {
-            throw new Exception('Oops! Não foi possível realizar essa ação. Por favor, contate a administração do sistema.');
+            throw new Exception('Oops! Não foi possível realizar essa ação. Por favor, contate a administração do sistema.', 500);
         }
 
         return [
