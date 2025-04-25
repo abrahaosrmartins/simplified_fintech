@@ -16,6 +16,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: composer-${{hashFiles('**/composer.lock')}}
+          restore-key:
+            composer-
+
+
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -32,3 +41,13 @@ jobs:
       - name: Run tests suite
         run:
           php artisan test
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: ci_testing
+        ports:
+        - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=5s --health-retries=3
